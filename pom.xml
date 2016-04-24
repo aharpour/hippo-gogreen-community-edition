@@ -15,11 +15,11 @@
   <version>0.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <!-- 
+  <!--
     The below project elements are emptied/overridden as otherwise their metadata would be
     inherited or merged from the parent hippo-cms7-release pom (or its hippo-cms7-project pom).
 
-    DO NOT remove these tags but instead fill them in appropriately as needed, 
+    DO NOT remove these tags but instead fill them in appropriately as needed,
     UNLESS the inherited values are valid for your project.
   -->
   <url/>
@@ -69,11 +69,11 @@
     <xalan.version>2.7.1</xalan.version>
     <junit.version>4.10</junit.version>
     <easymock.version>3.1</easymock.version>
-     
+
     <filesync.override>false</filesync.override>
     <maven.plugins.filesync.version>1.0.0</maven.plugins.filesync.version>
     <repo.bootstrap>true</repo.bootstrap>
-
+    <docker.host></docker.host>
   </properties>
 
   <repositories>
@@ -417,6 +417,106 @@
                 </goals>
               </execution>
             </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <modules></modules>
+    </profile>
+
+    <profile>
+      <id>docker-compose</id>
+      <properties>
+        <docker.compose.project>hvahippo10demo</docker.compose.project>
+        <docker.compose.file> docker-compose.yml</docker.compose.file>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>pull</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>docker-compose</executable>
+                  <workingDirectory>${basedir}/src/main/docker</workingDirectory>
+                  <arguments>
+                    <argument>-f${docker.compose.file}</argument>
+                    <argument>-p ${docker.compose.project}</argument>
+                    <argument>pull</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>up</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>docker-compose</executable>
+                  <workingDirectory>${basedir}/src/main/docker</workingDirectory>
+                  <arguments>
+                    <argument>-f${docker.compose.file}</argument>
+                    <argument>-p ${docker.compose.project}</argument>
+                    <argument>up</argument>
+                    <argument>-d</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <environmentVariables>
+                <DOCKER_TLS_VERIFY>1</DOCKER_TLS_VERIFY>
+                <DOCKER_HOST>${docker.host}</DOCKER_HOST>
+              </environmentVariables>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <modules></modules>
+    </profile>
+    <profile>
+      <id>docker-compose-down</id>
+      <properties>
+        <docker.compose.project>hvahippo10demo</docker.compose.project>
+        <docker.compose.file> docker-compose.yml</docker.compose.file>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>down</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>docker-compose</executable>
+                  <workingDirectory>${basedir}/src/main/docker</workingDirectory>
+                  <arguments>
+                    <argument>-f${docker.compose.file}</argument>
+                    <argument>-p ${docker.compose.project}</argument>
+                    <argument>down</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <environmentVariables>
+                <DOCKER_TLS_VERIFY>1</DOCKER_TLS_VERIFY>
+                <DOCKER_HOST>${docker.host}</DOCKER_HOST>
+              </environmentVariables>
+            </configuration>
           </plugin>
         </plugins>
       </build>
