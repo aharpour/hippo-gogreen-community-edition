@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="hst:hosts" xmlns:sv="http://www.jcp.org/jcr/sv/1.0">
+<?xml version="1.0" encoding="UTF-8"?><sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" sv:name="hst:hosts">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>hst:virtualhosts</sv:value>
   </sv:property>
   <sv:property sv:name="hst:defaultcontextpath" sv:type="String">
     <sv:value>/site</sv:value>
+  </sv:property>
+  <sv:property sv:name="hst:defaulthostname" sv:type="String">
+    <sv:value>localhost</sv:value>
   </sv:property>
   <sv:node sv:name="dev-localhost">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
